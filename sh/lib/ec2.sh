@@ -22,10 +22,12 @@ getPublicIP() {
   else
     INSTANCEID=$1
   fi
-  if [[ -z $2 && -z ${AWS_DEFAULT_REGION} ]]; then
-    AWS_DEFAULT_REGION=$(getRegion)
+  if [[ ! -z $2 ]]; then
+    REGION=$2
+  elif [[ ! -z ${AWS_DEFAULT_REGION} ]]; then
+    REGION=${AWS_DEFAULT_REGION}
   else
-    AWS_DEFAULT_REGION=$2
+    REGION=$(getRegion)
   fi
-  aws ec2 describe-instances --instance-ids ${INSTANCEID}  --query 'Reservations[].Instances[].PrivateIpAddress' --output text
+  aws ec2 describe-instances --region ${REGION} --instance-ids ${INSTANCEID}  --query 'Reservations[].Instances[].PublicIpAddress' --output text
 }
