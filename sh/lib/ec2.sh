@@ -31,3 +31,8 @@ getPublicIP() {
   fi
   aws ec2 describe-instances --region ${REGION} --instance-ids ${INSTANCEID}  --query 'Reservations[].Instances[].PublicIpAddress' --output text
 }
+
+getTagValueByKey() {
+  # ARG1 - Tag key to lookup
+  aws ec2 describe-tags --region $(getRegion) --filters "Name=resource-id,Values=$(getInstanceId)" --output text | grep $1 | awk '{print $5}'
+}
