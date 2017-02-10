@@ -2,6 +2,7 @@
 #
 # Functions to interact with EC2
 unset ERROR
+declare -r CURL_CMD="curl -s --connect-timeout 3"
 
 getInstanceId() {
   ${CURL_CMD} http://169.254.169.254/latest/meta-data/instance-id
