@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Commong functions
+# Common functions
 unset ERROR #
 
 error() {
