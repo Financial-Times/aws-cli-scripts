@@ -2,6 +2,14 @@
 
 A collection of Bash functions to ease interaction with [aws command line tool](https://aws.amazon.com/documentation/cli/).
 
+## Usage
+
+Directory _sh/lib_ contains functions that can be called by first sourcing the file and then calling the function.
+
+Example source + function call command.
+
+`source sh/lib/ec2.sh ; deleteVPC vpc-9fcb94fb`
+
 ## Development environment
 
 Dev environments are built on Docker images. Dockerfiles are stored under directory dockerfiles/<service>/Dockerfile
