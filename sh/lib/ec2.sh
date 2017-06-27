@@ -122,7 +122,7 @@ getPublicIP() {
   #ARG1: Optional instance-id. If instance ID is not provided use getInstanceId to read it from meta-data
   #ARG2: Optional region. If region is not provided and envrionment variable AWS_DEFAULT_REGION is not set
   #      attempt to resolve it by querying instance meta-data
-  #returns: Public IP address if the instance
+  #returns: Public IP address of the instance
   if [[ -z $1 ]]; then
     INSTANCEID=$(getInstanceId)
   else
