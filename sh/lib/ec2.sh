@@ -70,7 +70,7 @@ deleteRoute() {
   if [[ $(routeTableExists $1) -eq 0 ]]; then
     aws ec2 delete-route --route-table-id $1 --destination-cidr-block $2
   else
-    echo "Routetable $1 does not exist"
+    echo "Route $1 does not exist"
   fi
 }
 
@@ -136,6 +136,47 @@ getPublicIP() {
     REGION=$(getRegion)
   fi
   aws ec2 describe-instances --region ${REGION} --instance-ids ${INSTANCEID}  --query 'Reservations[].Instances[].PublicIpAddress' --output text
+}
+
+getPrivateIP() {
+  #ARG1: Optional instance-id. If instance ID is not provided use getInstanceId to read it from meta-data
+  #ARG2: Optional region. If region is not provided and envrionment variable AWS_DEFAULT_REGION is not set
+  #      attempt to resolve it by querying instance meta-data
+  #returns: Private IP address of the instance
+  if [[ -z $1 ]]; then
+    INSTANCEID=$(getInstanceId)
+  else
+    INSTANCEID=$1
+  fi
+  if [[ ! -z $2 ]]; then
+    REGION=$2
+  elif [[ ! -z ${AWS_DEFAULT_REGION} ]]; then
+    REGION=${AWS_DEFAULT_REGION}
+  else
+    REGION=$(getRegion)
+  fi
+  aws ec2 describe-instances --region ${REGION} --instance-ids ${INSTANCEID}  --query 'Reservations[].Instances[].PrivateIpAddress' --output text
+}
+
+getStackName() {
+  #ARG1: Optional instance-id. If instance ID is not provided use getInstanceId to read it from meta-data
+  #ARG2: Optional region. If region is not provided and envrionment variable AWS_DEFAULT_REGION is not set
+  #      attempt to resolve it by querying instance meta-data
+  #returns: cloudformation stack name of an instance
+
+  if [[ -z $1 ]]; then
+    INSTANCEID=$(getInstanceId)
+  else
+    INSTANCEID=$1
+  fi
+  if [[ ! -z $2 ]]; then
+    REGION=$2
+  elif [[ ! -z ${AWS_DEFAULT_REGION} ]]; then
+    REGION=${AWS_DEFAULT_REGION}
+  else
+    REGION=$(getRegion)
+  fi
+  aws ec2 describe-tags --region ${REGION} --filters "Name=resource-id,Values=${INSTANCEID}" --output text | grep aws:cloudformation:stack-name | awk '{print $5}'
 }
 
 getTagValueByKey() {
